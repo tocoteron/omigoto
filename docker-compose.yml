@@ -1,0 +1,18 @@
+services:
+  db:
+    build: ./db
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: omigoto
+      POSTGRES_USER: omigoto
+      POSTGRES_PASSWORD_FILE: /run/secrets/db-password
+    secrets:
+      - db-password
+
+secrets:
+  db-password:
+    file: ./db/secrets/password.txt
