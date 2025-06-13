@@ -2,7 +2,11 @@ FROM postgres:17
 
 # Install dependencies
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends git ca-certificates build-essential postgresql-server-dev-17
+    apt-get install -y --no-install-recommends wget git ca-certificates build-essential postgresql-server-dev-17
+
+# Install sqldef
+RUN wget -O - https://github.com/sqldef/sqldef/releases/latest/download/psqldef_linux_amd64.tar.gz | tar xvz && \
+    mv psqldef /usr/local/bin/
 
 # Install pgvector extension
 RUN cd /tmp && \
