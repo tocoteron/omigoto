@@ -2,8 +2,8 @@
 db:
 	docker compose up -d db
 
-.PHONY: connect-db
-connect-db:
+.PHONY: db-connect
+db-connect:
 	docker compose exec db psql -U omigoto
 
 .PHONY: db-export
