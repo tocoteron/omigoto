@@ -1,3 +1,4 @@
 # DB
 db/secrets/
 db/data/
+db/current.sql
