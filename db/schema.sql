@@ -15,3 +15,12 @@ CREATE TABLE youtube_playlists (
         (is_uploads = false AND title IS NOT NULL)
     )
 );
+
+CREATE TABLE youtube_videos (
+    video_id TEXT PRIMARY KEY,
+    playlist_id TEXT NOT NULL REFERENCES youtube_playlists (playlist_id),
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    duration INTERVAL SECOND NOT NULL,
+    published_at TIMESTAMPTZ NOT NULL
+);
