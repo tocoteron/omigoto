@@ -22,6 +22,11 @@ CREATE TABLE youtube_videos (
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     duration INTERVAL SECOND NOT NULL,
+    thumbnail_default_url TEXT NOT NULL,  -- 120x90
+    thumbnail_medium_url TEXT NOT NULL,   -- 320x180
+    thumbnail_high_url TEXT NOT NULL,     -- 480x360
+    thumbnail_standard_url TEXT NOT NULL, -- 640x480
+    thumbnail_maxres_url TEXT NOT NULL,   -- 1280x720
     published_at TIMESTAMPTZ NOT NULL
 );
 
