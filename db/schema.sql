@@ -31,3 +31,9 @@ CREATE TABLE youtube_video_live_streaming_details (
     actual_end_time TIMESTAMPTZ NOT NULL,
     scheduled_start_time TIMESTAMPTZ NOT NULL
 );
+
+CREATE TABLE youtube_playlist_videos (
+    playlist_id TEXT NOT NULL REFERENCES youtube_playlists (playlist_id),
+    video_id TEXT NOT NULL REFERENCES youtube_videos (video_id),
+    PRIMARY KEY (playlist_id, video_id)
+);
