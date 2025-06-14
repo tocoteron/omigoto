@@ -24,3 +24,10 @@ CREATE TABLE youtube_videos (
     duration INTERVAL SECOND NOT NULL,
     published_at TIMESTAMPTZ NOT NULL
 );
+
+CREATE TABLE youtube_video_live_streaming_details (
+    video_id TEXT PRIMARY KEY REFERENCES youtube_videos (video_id),
+    actual_start_time TIMESTAMPTZ NOT NULL,
+    actual_end_time TIMESTAMPTZ NOT NULL,
+    scheduled_start_time TIMESTAMPTZ NOT NULL
+);
