@@ -109,34 +109,6 @@ func (r *youtubeRepository) ListPlaylists(
 	return playlists, response.PageInfo.TotalResults, nextPageToken, nil
 }
 
-func (r *youtubeRepository) ListVideoIDs(
-	ctx context.Context,
-	playlistID model.YouTubePlaylistID,
-	pageToken *repository.YouTubePageToken,
-) ([]model.YouTubeVideoID, int64, *repository.YouTubePageToken, error) {
-	call := r.service.PlaylistItems.List([]string{"snippet"}).
-		PlaylistId(string(playlistID)).
-		MaxResults(YouTubeMaxResults)
-
-	if pageToken != nil {
-		call.PageToken(string(*pageToken))
-	}
-
-	response, err := call.Do()
-	if err != nil {
-		return nil, 0, nil, fmt.Errorf("failed to list playlist items: %w", err)
-	}
-
-	videoIDs := make([]model.YouTubeVideoID, 0, len(response.Items))
-	for _, item := range response.Items {
-		videoIDs = append(videoIDs, model.YouTubeVideoID(item.Snippet.ResourceId.VideoId))
-	}
-
-	nextPageToken := pageTokenFromString(response.NextPageToken)
-
-	return videoIDs, response.PageInfo.TotalResults, nextPageToken, nil
-}
-
 func (r *youtubeRepository) ListVideos(
 	ctx context.Context,
 	videoIDs []model.YouTubeVideoID,
@@ -177,6 +149,34 @@ func (r *youtubeRepository) ListVideos(
 	nextPageToken := pageTokenFromString(response.NextPageToken)
 
 	return videos, response.PageInfo.TotalResults, nextPageToken, nil
+}
+
+func (r *youtubeRepository) ListVideoIDsByPlaylist(
+	ctx context.Context,
+	playlistID model.YouTubePlaylistID,
+	pageToken *repository.YouTubePageToken,
+) ([]model.YouTubeVideoID, int64, *repository.YouTubePageToken, error) {
+	call := r.service.PlaylistItems.List([]string{"snippet"}).
+		PlaylistId(string(playlistID)).
+		MaxResults(YouTubeMaxResults)
+
+	if pageToken != nil {
+		call.PageToken(string(*pageToken))
+	}
+
+	response, err := call.Do()
+	if err != nil {
+		return nil, 0, nil, fmt.Errorf("failed to list playlist items: %w", err)
+	}
+
+	videoIDs := make([]model.YouTubeVideoID, 0, len(response.Items))
+	for _, item := range response.Items {
+		videoIDs = append(videoIDs, model.YouTubeVideoID(item.Snippet.ResourceId.VideoId))
+	}
+
+	nextPageToken := pageTokenFromString(response.NextPageToken)
+
+	return videoIDs, response.PageInfo.TotalResults, nextPageToken, nil
 }
 
 func pageTokenFromString(token string) *repository.YouTubePageToken {

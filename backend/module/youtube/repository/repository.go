@@ -15,8 +15,8 @@ type YouTubeRepository interface {
 	ListPlaylists(ctx context.Context, channelID model.YouTubeChannelID, pageToken *YouTubePageToken) ([]*model.YouTubePlaylist, int64, *YouTubePageToken, error)
 
 	// Video operations
-	ListVideoIDs(ctx context.Context, playlistID model.YouTubePlaylistID, pageToken *YouTubePageToken) ([]model.YouTubeVideoID, int64, *YouTubePageToken, error)
 	ListVideos(ctx context.Context, videoIDs []model.YouTubeVideoID, pageToken *YouTubePageToken) ([]*model.YouTubeVideo, int64, *YouTubePageToken, error)
+	ListVideoIDsByPlaylist(ctx context.Context, playlistID model.YouTubePlaylistID, pageToken *YouTubePageToken) ([]model.YouTubeVideoID, int64, *YouTubePageToken, error)
 }
 
 type YouTubeDBRepository interface {

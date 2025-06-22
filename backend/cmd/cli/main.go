@@ -121,7 +121,7 @@ func listAllVideoIDs(
 
 	var pageToken *repository.YouTubePageToken
 	for {
-		ids, _, nextPageToken, err := youtubeRepo.ListVideoIDs(ctx, playlistID, pageToken)
+		ids, _, nextPageToken, err := youtubeRepo.ListVideoIDsByPlaylist(ctx, playlistID, pageToken)
 		if err != nil {
 			return nil, fmt.Errorf("failed to list video IDs: %w", err)
 		}
