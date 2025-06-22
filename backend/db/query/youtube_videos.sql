@@ -12,7 +12,7 @@ WHERE video_id = $1;
 
 -- name: ListYouTubeVideos :many
 SELECT * FROM youtube_videos
-WHERE video_id = ANY($1::text[]);
+WHERE video_id = ANY(@video_ids::text[]);
 
 -- name: CreateYouTubeVideoLiveStreamingDetails :exec
 INSERT INTO youtube_video_live_streaming_details (

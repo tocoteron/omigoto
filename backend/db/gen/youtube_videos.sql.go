@@ -118,8 +118,8 @@ SELECT video_id, title, description, duration, thumbnail_default_url, thumbnail_
 WHERE video_id = ANY($1::text[])
 `
 
-func (q *Queries) ListYouTubeVideos(ctx context.Context, dollar_1 []string) ([]YoutubeVideo, error) {
-	rows, err := q.db.Query(ctx, listYouTubeVideos, dollar_1)
+func (q *Queries) ListYouTubeVideos(ctx context.Context, videoIds []string) ([]YoutubeVideo, error) {
+	rows, err := q.db.Query(ctx, listYouTubeVideos, videoIds)
 	if err != nil {
 		return nil, err
 	}
