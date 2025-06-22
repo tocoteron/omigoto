@@ -11,3 +11,8 @@ sql:
         emit_interface: true
         emit_empty_slices: true
         emit_pointers_for_null_types: true
+        overrides:
+          - db_type: "timestamptz"
+            go_type: "time.Time"
+          - db_type: "pg_catalog.interval"
+            go_type: "time.Duration"

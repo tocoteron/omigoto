@@ -5,7 +5,7 @@
 package db
 
 import (
-	"github.com/jackc/pgx/v5/pgtype"
+	"time"
 )
 
 type YoutubeChannel struct {
@@ -29,18 +29,18 @@ type YoutubeVideo struct {
 	VideoID              string
 	Title                string
 	Description          string
-	Duration             pgtype.Interval
+	Duration             time.Duration
 	ThumbnailDefaultUrl  *string
 	ThumbnailMediumUrl   *string
 	ThumbnailHighUrl     *string
 	ThumbnailStandardUrl *string
 	ThumbnailMaxresUrl   *string
-	PublishedAt          pgtype.Timestamptz
+	PublishedAt          time.Time
 }
 
 type YoutubeVideoLiveStreamingDetail struct {
 	VideoID            string
-	ActualStartTime    pgtype.Timestamptz
-	ActualEndTime      pgtype.Timestamptz
-	ScheduledStartTime pgtype.Timestamptz
+	ActualStartTime    time.Time
+	ActualEndTime      time.Time
+	ScheduledStartTime time.Time
 }
