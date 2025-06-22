@@ -17,3 +17,7 @@ db-migrate:
 .PHONY: db-migrate-dry-run
 db-migrate-dry-run:
 	docker compose exec -T db psqldef -U omigoto omigoto --enable-drop --dry-run < ./db/schema.sql
+
+.PHONY: sqlc
+sqlc:
+	docker run --rm -v $(PWD):/src -w /src sqlc/sqlc generate -f ./backend/db/sqlc.yaml
