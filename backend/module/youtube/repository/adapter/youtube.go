@@ -7,14 +7,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/tocoteron/omigoto/backend/model"
+	"github.com/tocoteron/omigoto/backend/module/youtube/model"
+	"github.com/tocoteron/omigoto/backend/module/youtube/repository"
 	"google.golang.org/api/option"
 	"google.golang.org/api/youtube/v3"
 )
 
 const YouTubeMaxResults = 50
 
-var _ model.YouTubeRepository = &youtubeRepository{}
+var _ repository.YouTubeRepository = &youtubeRepository{}
 
 type youtubeRepository struct {
 	service *youtube.Service
@@ -52,8 +53,10 @@ func (r *youtubeRepository) GetChannel(
 	}
 
 	return &model.YouTubeChannel{
-		ID:                channelID,
-		Handle:            model.YouTubeChannelHandle(response.Items[0].Snippet.CustomUrl),
+		YouTubeChannelIdentity: model.YouTubeChannelIdentity{
+			ID:     channelID,
+			Handle: model.YouTubeChannelHandle(response.Items[0].Snippet.CustomUrl),
+		},
 		UploadsPlaylistID: model.YouTubePlaylistID(response.Items[0].ContentDetails.RelatedPlaylists.Uploads),
 	}, nil
 }
@@ -77,8 +80,8 @@ func (r *youtubeRepository) GetUploadsPlaylist(
 func (r *youtubeRepository) ListPlaylists(
 	ctx context.Context,
 	channelID model.YouTubeChannelID,
-	pageToken *model.YouTubePageToken,
-) ([]*model.YouTubePlaylist, int64, *model.YouTubePageToken, error) {
+	pageToken *repository.YouTubePageToken,
+) ([]*model.YouTubePlaylist, int64, *repository.YouTubePageToken, error) {
 	call := r.service.Playlists.List([]string{"snippet"}).
 		ChannelId(string(channelID)).
 		MaxResults(50) // max value is 50
@@ -109,8 +112,8 @@ func (r *youtubeRepository) ListPlaylists(
 func (r *youtubeRepository) ListVideoIDs(
 	ctx context.Context,
 	playlistID model.YouTubePlaylistID,
-	pageToken *model.YouTubePageToken,
-) ([]model.YouTubeVideoID, int64, *model.YouTubePageToken, error) {
+	pageToken *repository.YouTubePageToken,
+) ([]model.YouTubeVideoID, int64, *repository.YouTubePageToken, error) {
 	call := r.service.PlaylistItems.List([]string{"snippet"}).
 		PlaylistId(string(playlistID)).
 		MaxResults(YouTubeMaxResults)
@@ -137,8 +140,8 @@ func (r *youtubeRepository) ListVideoIDs(
 func (r *youtubeRepository) ListVideos(
 	ctx context.Context,
 	videoIDs []model.YouTubeVideoID,
-	pageToken *model.YouTubePageToken,
-) ([]*model.YouTubeVideo, int64, *model.YouTubePageToken, error) {
+	pageToken *repository.YouTubePageToken,
+) ([]*model.YouTubeVideo, int64, *repository.YouTubePageToken, error) {
 	if len(videoIDs) > YouTubeMaxResults {
 		return nil, 0, nil, fmt.Errorf("videoIDs length must be less than or equal to %d", YouTubeMaxResults)
 	}
@@ -176,12 +179,12 @@ func (r *youtubeRepository) ListVideos(
 	return videos, response.PageInfo.TotalResults, nextPageToken, nil
 }
 
-func pageTokenFromString(token string) *model.YouTubePageToken {
+func pageTokenFromString(token string) *repository.YouTubePageToken {
 	if token == "" {
 		return nil
 	}
 
-	t := model.YouTubePageToken(token)
+	t := repository.YouTubePageToken(token)
 
 	return &t
 }

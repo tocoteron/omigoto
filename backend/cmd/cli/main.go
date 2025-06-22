@@ -6,8 +6,9 @@ import (
 	"log"
 
 	"github.com/caarlos0/env/v11"
-	"github.com/tocoteron/omigoto/backend/model"
-	"github.com/tocoteron/omigoto/backend/model/adapter"
+	"github.com/tocoteron/omigoto/backend/module/youtube/model"
+	"github.com/tocoteron/omigoto/backend/module/youtube/repository"
+	"github.com/tocoteron/omigoto/backend/module/youtube/repository/adapter"
 	"github.com/tocoteron/omigoto/backend/omikun"
 )
 
@@ -61,7 +62,7 @@ func main() {
 
 func getChannel(
 	ctx context.Context,
-	youtubeRepo model.YouTubeRepository,
+	youtubeRepo repository.YouTubeRepository,
 	channelID model.YouTubeChannelID,
 ) (*model.YouTubeChannel, error) {
 	channel, err := youtubeRepo.GetChannel(ctx, channelID)
@@ -74,7 +75,7 @@ func getChannel(
 
 func getUploadsPlaylist(
 	ctx context.Context,
-	youtubeRepo model.YouTubeRepository,
+	youtubeRepo repository.YouTubeRepository,
 	channelID model.YouTubeChannelID,
 ) (*model.YouTubePlaylist, error) {
 	uploadsPlaylist, err := youtubeRepo.GetUploadsPlaylist(ctx, channelID)
@@ -87,12 +88,12 @@ func getUploadsPlaylist(
 
 func listAllPlaylists(
 	ctx context.Context,
-	youtubeRepo model.YouTubeRepository,
+	youtubeRepo repository.YouTubeRepository,
 	channelID model.YouTubeChannelID,
 ) ([]*model.YouTubePlaylist, error) {
 	playlists := make([]*model.YouTubePlaylist, 0)
 
-	var pageToken *model.YouTubePageToken
+	var pageToken *repository.YouTubePageToken
 	for {
 		pls, _, nextPageToken, err := youtubeRepo.ListPlaylists(ctx, channelID, pageToken)
 		if err != nil {
@@ -113,12 +114,12 @@ func listAllPlaylists(
 
 func listAllVideoIDs(
 	ctx context.Context,
-	youtubeRepo model.YouTubeRepository,
+	youtubeRepo repository.YouTubeRepository,
 	playlistID model.YouTubePlaylistID,
 ) ([]model.YouTubeVideoID, error) {
 	videoIDs := make([]model.YouTubeVideoID, 0)
 
-	var pageToken *model.YouTubePageToken
+	var pageToken *repository.YouTubePageToken
 	for {
 		ids, _, nextPageToken, err := youtubeRepo.ListVideoIDs(ctx, playlistID, pageToken)
 		if err != nil {
@@ -139,12 +140,12 @@ func listAllVideoIDs(
 
 func listAllVideos(
 	ctx context.Context,
-	youtubeRepo model.YouTubeRepository,
+	youtubeRepo repository.YouTubeRepository,
 	videoIDs []model.YouTubeVideoID,
 ) ([]*model.YouTubeVideo, error) {
 	videos := make([]*model.YouTubeVideo, 0)
 
-	var pageToken *model.YouTubePageToken
+	var pageToken *repository.YouTubePageToken
 	for {
 		vs, _, nextPageToken, err := youtubeRepo.ListVideos(ctx, videoIDs, pageToken)
 		if err != nil {
