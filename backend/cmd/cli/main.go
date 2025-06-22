@@ -41,7 +41,7 @@ func main() {
 	}
 	fmt.Printf("playlists: %+v\n", playlists)
 
-	uploadsPlaylist, err := getUploadsPlaylist(ctx, youtubeRepo, omikun.YouTubeChannel.ID)
+	uploadsPlaylist, err := getPlaylist(ctx, youtubeRepo, channel.UploadsPlaylistID)
 	if err != nil {
 		log.Fatalf("failed to get uploads playlist: %v", err)
 	}
@@ -73,17 +73,17 @@ func getChannel(
 	return channel, nil
 }
 
-func getUploadsPlaylist(
+func getPlaylist(
 	ctx context.Context,
 	youtubeRepo repository.YouTubeRepository,
-	channelID model.YouTubeChannelID,
+	playlistID model.YouTubePlaylistID,
 ) (*model.YouTubePlaylist, error) {
-	uploadsPlaylist, err := youtubeRepo.GetUploadsPlaylist(ctx, channelID)
+	playlist, err := youtubeRepo.GetPlaylist(ctx, playlistID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get uploads playlist: %w", err)
+		return nil, fmt.Errorf("failed to get playlist: %w", err)
 	}
 
-	return uploadsPlaylist, nil
+	return playlist, nil
 }
 
 func listAllPlaylists(

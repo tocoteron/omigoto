@@ -61,19 +61,29 @@ func (r *youtubeRepository) GetChannel(
 	}, nil
 }
 
-func (r *youtubeRepository) GetUploadsPlaylist(
+func (r *youtubeRepository) GetPlaylist(
 	ctx context.Context,
-	channelID model.YouTubeChannelID,
+	playlistID model.YouTubePlaylistID,
 ) (*model.YouTubePlaylist, error) {
-	channel, err := r.GetChannel(ctx, channelID)
+	call := r.service.Playlists.List([]string{"snippet"}).
+		Id(string(playlistID)).
+		MaxResults(1)
+
+	response, err := call.Do()
 	if err != nil {
-		return nil, fmt.Errorf("failed to get channel: %w", err)
+		return nil, fmt.Errorf("failed to get playlist: %w", err)
+	}
+
+	if len(response.Items) == 0 {
+		return nil, fmt.Errorf("playlist not found")
+	}
+	if len(response.Items) > 1 {
+		return nil, fmt.Errorf("multiple playlists found")
 	}
 
 	return &model.YouTubePlaylist{
-		ID:        channel.UploadsPlaylistID,
-		IsUploads: true,
-		Title:     nil,
+		ID:    model.YouTubePlaylistID(response.Items[0].Id),
+		Title: response.Items[0].Snippet.Title,
 	}, nil
 }
 
@@ -98,9 +108,8 @@ func (r *youtubeRepository) ListPlaylists(
 	playlists := make([]*model.YouTubePlaylist, 0, len(response.Items))
 	for _, item := range response.Items {
 		playlists = append(playlists, &model.YouTubePlaylist{
-			ID:        model.YouTubePlaylistID(item.Id),
-			IsUploads: false,
-			Title:     &item.Snippet.Title,
+			ID:    model.YouTubePlaylistID(item.Id),
+			Title: item.Snippet.Title,
 		})
 	}
 

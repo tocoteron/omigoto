@@ -11,7 +11,7 @@ type YouTubeRepository interface {
 	GetChannel(ctx context.Context, channelID model.YouTubeChannelID) (*model.YouTubeChannel, error)
 
 	// Playlist operations
-	GetUploadsPlaylist(ctx context.Context, channelID model.YouTubeChannelID) (*model.YouTubePlaylist, error)
+	GetPlaylist(ctx context.Context, playlistID model.YouTubePlaylistID) (*model.YouTubePlaylist, error)
 	ListPlaylists(ctx context.Context, channelID model.YouTubeChannelID, pageToken *YouTubePageToken) ([]*model.YouTubePlaylist, int64, *YouTubePageToken, error)
 
 	// Video operations

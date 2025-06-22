@@ -17,9 +17,8 @@ type YouTubeChannel struct {
 }
 
 type YouTubePlaylist struct {
-	ID        YouTubePlaylistID
-	IsUploads bool
-	Title     *string // nil if IsUploads is true
+	ID    YouTubePlaylistID
+	Title string
 }
 
 type YouTubeVideo struct {
