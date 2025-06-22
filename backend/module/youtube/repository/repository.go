@@ -7,33 +7,16 @@ import (
 )
 
 type YouTubeRepository interface {
-	GetChannel(
-		ctx context.Context,
-		channelID model.YouTubeChannelID,
-	) (*model.YouTubeChannel, error)
+	// Channel operations
+	GetChannel(ctx context.Context, channelID model.YouTubeChannelID) (*model.YouTubeChannel, error)
 
-	GetUploadsPlaylist(
-		ctx context.Context,
-		channelID model.YouTubeChannelID,
-	) (*model.YouTubePlaylist, error)
+	// Playlist operations
+	GetUploadsPlaylist(ctx context.Context, channelID model.YouTubeChannelID) (*model.YouTubePlaylist, error)
+	ListPlaylists(ctx context.Context, channelID model.YouTubeChannelID, pageToken *YouTubePageToken) ([]*model.YouTubePlaylist, int64, *YouTubePageToken, error)
 
-	ListPlaylists(
-		ctx context.Context,
-		channelID model.YouTubeChannelID,
-		pageToken *YouTubePageToken,
-	) ([]*model.YouTubePlaylist, int64, *YouTubePageToken, error)
-
-	ListVideoIDs(
-		ctx context.Context,
-		playlistID model.YouTubePlaylistID,
-		pageToken *YouTubePageToken,
-	) ([]model.YouTubeVideoID, int64, *YouTubePageToken, error)
-
-	ListVideos(
-		ctx context.Context,
-		videoIDs []model.YouTubeVideoID,
-		pageToken *YouTubePageToken,
-	) ([]*model.YouTubeVideo, int64, *YouTubePageToken, error)
+	// Video operations
+	ListVideoIDs(ctx context.Context, playlistID model.YouTubePlaylistID, pageToken *YouTubePageToken) ([]model.YouTubeVideoID, int64, *YouTubePageToken, error)
+	ListVideos(ctx context.Context, videoIDs []model.YouTubeVideoID, pageToken *YouTubePageToken) ([]*model.YouTubeVideo, int64, *YouTubePageToken, error)
 }
 
 type YouTubeDBRepository interface {
