@@ -14,14 +14,14 @@ type Querier interface {
 	CreateYouTubePlaylistVideo(ctx context.Context, arg CreateYouTubePlaylistVideoParams) error
 	CreateYouTubeVideo(ctx context.Context, arg CreateYouTubeVideoParams) error
 	CreateYouTubeVideoLiveStreamingDetails(ctx context.Context, arg CreateYouTubeVideoLiveStreamingDetailsParams) error
-	GetUploadsPlaylistByChannel(ctx context.Context, channelID string) (YoutubePlaylist, error)
 	GetYouTubeChannel(ctx context.Context, channelID string) (YoutubeChannel, error)
 	GetYouTubeChannelByHandle(ctx context.Context, handle string) (YoutubeChannel, error)
 	GetYouTubePlaylist(ctx context.Context, playlistID string) (YoutubePlaylist, error)
 	GetYouTubeVideo(ctx context.Context, videoID string) (YoutubeVideo, error)
 	GetYouTubeVideoLiveStreamingDetails(ctx context.Context, videoID string) (YoutubeVideoLiveStreamingDetail, error)
+	ListPlaylistIDsByChannel(ctx context.Context, channelID string) ([]string, error)
+	ListPlaylists(ctx context.Context, playlistIds []string) ([]YoutubePlaylist, error)
 	ListYouTubePlaylistVideoIDs(ctx context.Context, playlistID string) ([]string, error)
-	ListYouTubePlaylistsByChannel(ctx context.Context, channelID string) ([]YoutubePlaylist, error)
 	ListYouTubeVideos(ctx context.Context, videoIds []string) ([]YoutubeVideo, error)
 }
 

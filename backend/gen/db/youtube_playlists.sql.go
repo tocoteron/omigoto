@@ -10,68 +10,65 @@ import (
 )
 
 const createYouTubePlaylist = `-- name: CreateYouTubePlaylist :exec
-INSERT INTO youtube_playlists (playlist_id, channel_id, is_uploads, title)
-VALUES ($1, $2, $3, $4)
+INSERT INTO youtube_playlists (playlist_id, channel_id, title)
+VALUES ($1, $2, $3)
 `
 
 type CreateYouTubePlaylistParams struct {
 	PlaylistID string
 	ChannelID  string
-	IsUploads  bool
-	Title      *string
+	Title      string
 }
 
 func (q *Queries) CreateYouTubePlaylist(ctx context.Context, arg CreateYouTubePlaylistParams) error {
-	_, err := q.db.Exec(ctx, createYouTubePlaylist,
-		arg.PlaylistID,
-		arg.ChannelID,
-		arg.IsUploads,
-		arg.Title,
-	)
+	_, err := q.db.Exec(ctx, createYouTubePlaylist, arg.PlaylistID, arg.ChannelID, arg.Title)
 	return err
 }
 
-const getUploadsPlaylistByChannel = `-- name: GetUploadsPlaylistByChannel :one
-SELECT playlist_id, channel_id, is_uploads, title FROM youtube_playlists
-WHERE channel_id = $1 AND is_uploads = true
-`
-
-func (q *Queries) GetUploadsPlaylistByChannel(ctx context.Context, channelID string) (YoutubePlaylist, error) {
-	row := q.db.QueryRow(ctx, getUploadsPlaylistByChannel, channelID)
-	var i YoutubePlaylist
-	err := row.Scan(
-		&i.PlaylistID,
-		&i.ChannelID,
-		&i.IsUploads,
-		&i.Title,
-	)
-	return i, err
-}
-
 const getYouTubePlaylist = `-- name: GetYouTubePlaylist :one
-SELECT playlist_id, channel_id, is_uploads, title FROM youtube_playlists
+SELECT playlist_id, channel_id, title FROM youtube_playlists
 WHERE playlist_id = $1
 `
 
 func (q *Queries) GetYouTubePlaylist(ctx context.Context, playlistID string) (YoutubePlaylist, error) {
 	row := q.db.QueryRow(ctx, getYouTubePlaylist, playlistID)
 	var i YoutubePlaylist
-	err := row.Scan(
-		&i.PlaylistID,
-		&i.ChannelID,
-		&i.IsUploads,
-		&i.Title,
-	)
+	err := row.Scan(&i.PlaylistID, &i.ChannelID, &i.Title)
 	return i, err
 }
 
-const listYouTubePlaylistsByChannel = `-- name: ListYouTubePlaylistsByChannel :many
-SELECT playlist_id, channel_id, is_uploads, title FROM youtube_playlists
+const listPlaylistIDsByChannel = `-- name: ListPlaylistIDsByChannel :many
+SELECT playlist_id FROM youtube_playlists
 WHERE channel_id = $1
 `
 
-func (q *Queries) ListYouTubePlaylistsByChannel(ctx context.Context, channelID string) ([]YoutubePlaylist, error) {
-	rows, err := q.db.Query(ctx, listYouTubePlaylistsByChannel, channelID)
+func (q *Queries) ListPlaylistIDsByChannel(ctx context.Context, channelID string) ([]string, error) {
+	rows, err := q.db.Query(ctx, listPlaylistIDsByChannel, channelID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []string{}
+	for rows.Next() {
+		var playlist_id string
+		if err := rows.Scan(&playlist_id); err != nil {
+			return nil, err
+		}
+		items = append(items, playlist_id)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listPlaylists = `-- name: ListPlaylists :many
+SELECT playlist_id, channel_id, title FROM youtube_playlists
+WHERE playlist_id = ANY($1::text[])
+`
+
+func (q *Queries) ListPlaylists(ctx context.Context, playlistIds []string) ([]YoutubePlaylist, error) {
+	rows, err := q.db.Query(ctx, listPlaylists, playlistIds)
 	if err != nil {
 		return nil, err
 	}
@@ -79,12 +76,7 @@ func (q *Queries) ListYouTubePlaylistsByChannel(ctx context.Context, channelID s
 	items := []YoutubePlaylist{}
 	for rows.Next() {
 		var i YoutubePlaylist
-		if err := rows.Scan(
-			&i.PlaylistID,
-			&i.ChannelID,
-			&i.IsUploads,
-			&i.Title,
-		); err != nil {
+		if err := rows.Scan(&i.PlaylistID, &i.ChannelID, &i.Title); err != nil {
 			return nil, err
 		}
 		items = append(items, i)

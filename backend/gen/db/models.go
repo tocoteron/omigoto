@@ -9,15 +9,15 @@ import (
 )
 
 type YoutubeChannel struct {
-	ChannelID string
-	Handle    string
+	ChannelID         string
+	Handle            string
+	UploadsPlaylistID string
 }
 
 type YoutubePlaylist struct {
 	PlaylistID string
 	ChannelID  string
-	IsUploads  bool
-	Title      *string
+	Title      string
 }
 
 type YoutubePlaylistVideo struct {

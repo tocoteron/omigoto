@@ -1,15 +1,15 @@
 -- name: CreateYouTubePlaylist :exec
-INSERT INTO youtube_playlists (playlist_id, channel_id, is_uploads, title)
-VALUES ($1, $2, $3, $4);
+INSERT INTO youtube_playlists (playlist_id, channel_id, title)
+VALUES ($1, $2, $3);
 
 -- name: GetYouTubePlaylist :one
 SELECT * FROM youtube_playlists
 WHERE playlist_id = $1;
 
--- name: ListYouTubePlaylistsByChannel :many
+-- name: ListPlaylists :many
 SELECT * FROM youtube_playlists
-WHERE channel_id = $1;
+WHERE playlist_id = ANY(@playlist_ids::text[]);
 
--- name: GetUploadsPlaylistByChannel :one
-SELECT * FROM youtube_playlists
-WHERE channel_id = $1 AND is_uploads = true;
+-- name: ListPlaylistIDsByChannel :many
+SELECT playlist_id FROM youtube_playlists
+WHERE channel_id = $1;

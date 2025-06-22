@@ -10,40 +10,41 @@ import (
 )
 
 const createYouTubeChannel = `-- name: CreateYouTubeChannel :exec
-INSERT INTO youtube_channels (channel_id, handle)
-VALUES ($1, $2)
+INSERT INTO youtube_channels (channel_id, handle, uploads_playlist_id)
+VALUES ($1, $2, $3)
 `
 
 type CreateYouTubeChannelParams struct {
-	ChannelID string
-	Handle    string
+	ChannelID         string
+	Handle            string
+	UploadsPlaylistID string
 }
 
 func (q *Queries) CreateYouTubeChannel(ctx context.Context, arg CreateYouTubeChannelParams) error {
-	_, err := q.db.Exec(ctx, createYouTubeChannel, arg.ChannelID, arg.Handle)
+	_, err := q.db.Exec(ctx, createYouTubeChannel, arg.ChannelID, arg.Handle, arg.UploadsPlaylistID)
 	return err
 }
 
 const getYouTubeChannel = `-- name: GetYouTubeChannel :one
-SELECT channel_id, handle FROM youtube_channels
+SELECT channel_id, handle, uploads_playlist_id FROM youtube_channels
 WHERE channel_id = $1
 `
 
 func (q *Queries) GetYouTubeChannel(ctx context.Context, channelID string) (YoutubeChannel, error) {
 	row := q.db.QueryRow(ctx, getYouTubeChannel, channelID)
 	var i YoutubeChannel
-	err := row.Scan(&i.ChannelID, &i.Handle)
+	err := row.Scan(&i.ChannelID, &i.Handle, &i.UploadsPlaylistID)
 	return i, err
 }
 
 const getYouTubeChannelByHandle = `-- name: GetYouTubeChannelByHandle :one
-SELECT channel_id, handle FROM youtube_channels
+SELECT channel_id, handle, uploads_playlist_id FROM youtube_channels
 WHERE handle = $1
 `
 
 func (q *Queries) GetYouTubeChannelByHandle(ctx context.Context, handle string) (YoutubeChannel, error) {
 	row := q.db.QueryRow(ctx, getYouTubeChannelByHandle, handle)
 	var i YoutubeChannel
-	err := row.Scan(&i.ChannelID, &i.Handle)
+	err := row.Scan(&i.ChannelID, &i.Handle, &i.UploadsPlaylistID)
 	return i, err
 }

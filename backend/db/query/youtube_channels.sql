@@ -1,6 +1,6 @@
 -- name: CreateYouTubeChannel :exec
-INSERT INTO youtube_channels (channel_id, handle)
-VALUES ($1, $2);
+INSERT INTO youtube_channels (channel_id, handle, uploads_playlist_id)
+VALUES ($1, $2, $3);
 
 -- name: GetYouTubeChannel :one
 SELECT * FROM youtube_channels
