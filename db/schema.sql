@@ -1,19 +1,17 @@
 CREATE EXTENSION vector;
 
 CREATE TABLE youtube_channels (
-    channel_id TEXT PRIMARY KEY, -- UC1cnByKe24JjTv38tH_7BYw
-    handle TEXT NOT NULL UNIQUE -- @izuho_omi
+    channel_id TEXT PRIMARY KEY,       -- UC1cnByKe24JjTv38tH_7BYw
+    handle TEXT NOT NULL UNIQUE,       -- @izuho_omi
+    uploads_playlist_id TEXT NOT NULL, -- UU1cnByKe24JjTv38tH_7BYw
+    CONSTRAINT youtube_channels_uploads_playlist_id_fkey FOREIGN KEY (uploads_playlist_id) REFERENCES youtube_playlists (playlist_id) DEFERRABLE INITIALLY DEFERRED
 );
 
 CREATE TABLE youtube_playlists (
     playlist_id TEXT PRIMARY KEY,
-    channel_id TEXT NOT NULL REFERENCES youtube_channels (channel_id),
-    is_uploads BOOLEAN NOT NULL,
-    title TEXT,
-    CONSTRAINT youtube_playlists_check CHECK (
-        (is_uploads = true AND title IS NULL) OR
-        (is_uploads = false AND title IS NOT NULL)
-    )
+    channel_id TEXT NOT NULL,
+    title TEXT NOT NULL,
+    CONSTRAINT youtube_playlists_channel_id_fkey FOREIGN KEY (channel_id) REFERENCES youtube_channels (channel_id) DEFERRABLE INITIALLY DEFERRED
 );
 
 CREATE TABLE youtube_videos (
