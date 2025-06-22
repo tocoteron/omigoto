@@ -7,8 +7,6 @@ package db
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createYouTubePlaylist = `-- name: CreateYouTubePlaylist :exec
@@ -20,7 +18,7 @@ type CreateYouTubePlaylistParams struct {
 	PlaylistID string
 	ChannelID  string
 	IsUploads  bool
-	Title      pgtype.Text
+	Title      *string
 }
 
 func (q *Queries) CreateYouTubePlaylist(ctx context.Context, arg CreateYouTubePlaylistParams) error {
@@ -78,7 +76,7 @@ func (q *Queries) ListYouTubePlaylistsByChannel(ctx context.Context, channelID s
 		return nil, err
 	}
 	defer rows.Close()
-	var items []YoutubePlaylist
+	items := []YoutubePlaylist{}
 	for rows.Next() {
 		var i YoutubePlaylist
 		if err := rows.Scan(

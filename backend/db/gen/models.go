@@ -17,7 +17,7 @@ type YoutubePlaylist struct {
 	PlaylistID string
 	ChannelID  string
 	IsUploads  bool
-	Title      pgtype.Text
+	Title      *string
 }
 
 type YoutubePlaylistVideo struct {
@@ -30,11 +30,11 @@ type YoutubeVideo struct {
 	Title                string
 	Description          string
 	Duration             pgtype.Interval
-	ThumbnailDefaultUrl  pgtype.Text
-	ThumbnailMediumUrl   pgtype.Text
-	ThumbnailHighUrl     pgtype.Text
-	ThumbnailStandardUrl pgtype.Text
-	ThumbnailMaxresUrl   pgtype.Text
+	ThumbnailDefaultUrl  *string
+	ThumbnailMediumUrl   *string
+	ThumbnailHighUrl     *string
+	ThumbnailStandardUrl *string
+	ThumbnailMaxresUrl   *string
 	PublishedAt          pgtype.Timestamptz
 }
 

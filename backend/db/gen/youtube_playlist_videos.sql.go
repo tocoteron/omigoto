@@ -35,7 +35,7 @@ func (q *Queries) ListYouTubePlaylistVideoIDs(ctx context.Context, playlistID st
 		return nil, err
 	}
 	defer rows.Close()
-	var items []string
+	items := []string{}
 	for rows.Next() {
 		var video_id string
 		if err := rows.Scan(&video_id); err != nil {

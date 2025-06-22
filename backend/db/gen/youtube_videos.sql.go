@@ -25,11 +25,11 @@ type CreateYouTubeVideoParams struct {
 	Title                string
 	Description          string
 	Duration             pgtype.Interval
-	ThumbnailDefaultUrl  pgtype.Text
-	ThumbnailMediumUrl   pgtype.Text
-	ThumbnailHighUrl     pgtype.Text
-	ThumbnailStandardUrl pgtype.Text
-	ThumbnailMaxresUrl   pgtype.Text
+	ThumbnailDefaultUrl  *string
+	ThumbnailMediumUrl   *string
+	ThumbnailHighUrl     *string
+	ThumbnailStandardUrl *string
+	ThumbnailMaxresUrl   *string
 	PublishedAt          pgtype.Timestamptz
 }
 
@@ -124,7 +124,7 @@ func (q *Queries) ListYouTubeVideos(ctx context.Context, videoIds []string) ([]Y
 		return nil, err
 	}
 	defer rows.Close()
-	var items []YoutubeVideo
+	items := []YoutubeVideo{}
 	for rows.Next() {
 		var i YoutubeVideo
 		if err := rows.Scan(
