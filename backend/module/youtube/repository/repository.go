@@ -26,7 +26,7 @@ type YouTubeDBRepository interface {
 	GetChannelByHandle(ctx context.Context, handle model.YouTubeChannelHandle) (*model.YouTubeChannel, error)
 
 	// Playlist operations
-	CreatePlaylist(ctx context.Context, playlist *model.YouTubePlaylist, channelID model.YouTubeChannelID) error
+	CreatePlaylist(ctx context.Context, channelID model.YouTubeChannelID, playlist *model.YouTubePlaylist) error
 	GetPlaylist(ctx context.Context, playlistID model.YouTubePlaylistID) (*model.YouTubePlaylist, error)
 	GetUploadsPlaylistByChannel(ctx context.Context, channelID model.YouTubeChannelID) (*model.YouTubePlaylist, error)
 	ListPlaylistsByChannel(ctx context.Context, channelID model.YouTubeChannelID) ([]*model.YouTubePlaylist, error)
