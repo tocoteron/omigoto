@@ -28,8 +28,8 @@ type YouTubeDBRepository interface {
 	// Playlist operations
 	CreatePlaylist(ctx context.Context, channelID model.YouTubeChannelID, playlist *model.YouTubePlaylist) error
 	GetPlaylist(ctx context.Context, playlistID model.YouTubePlaylistID) (*model.YouTubePlaylist, error)
-	GetUploadsPlaylistByChannel(ctx context.Context, channelID model.YouTubeChannelID) (*model.YouTubePlaylist, error)
-	ListPlaylistsByChannel(ctx context.Context, channelID model.YouTubeChannelID) ([]*model.YouTubePlaylist, error)
+	ListPlaylists(ctx context.Context, playlistIDs []model.YouTubePlaylistID) ([]*model.YouTubePlaylist, error)
+	ListPlaylistIDsByChannel(ctx context.Context, channelID model.YouTubeChannelID) ([]model.YouTubePlaylistID, error)
 
 	// Video operations
 	CreateVideo(ctx context.Context, video *model.YouTubeVideo) error
